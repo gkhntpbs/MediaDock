@@ -6,11 +6,12 @@ import time
 import webbrowser
 
 import docker
-from media_dock_logger import Logger
 from PyQt5.QtCore import QDate, QDateTime, Qt, QTime, QTimer
 from PyQt5.QtGui import QColor, QFont, QIcon
 from PyQt5.QtWidgets import (QAction, QApplication, QMainWindow, QMenu,
                              QSystemTrayIcon, QTextEdit)
+
+from media_dock_logger import Logger
 
 client = docker.from_env(timeout=120)
 
