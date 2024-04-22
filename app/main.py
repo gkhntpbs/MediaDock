@@ -249,7 +249,7 @@ class TrayApplication(QApplication):
         Logger.SUCCESS("Containers setup completed.")
 
     def show_about(self):
-        github_url = "https://github.com/"
+        github_url = "https://github.com/gkhntpbs/MediaDock"
         webbrowser.open(github_url)
 
     def on_tray_icon_activated(self, reason):
