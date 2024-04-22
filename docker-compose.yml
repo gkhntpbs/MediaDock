@@ -1,0 +1,106 @@
+version: '3.8'
+services:
+  jellyseerr:
+    image: fallenbagel/jellyseerr
+    container_name: jellyseerr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Istanbul
+    volumes:
+      - ./config/jellyseerr:/app/config
+    ports:
+      - 5055:5055
+    restart: always
+
+  openvpn-client:
+    build:
+      context: ./openvpn-client
+      dockerfile: Dockerfile
+    container_name: openvpn-client
+    dns:
+      - 1.1.1.1
+      - 1.0.0.1
+    ports:
+      - 8080:8080 #  qbittorrent
+      - 6881:6881 #  qbittorrent
+      - 6881:6881/udp #  qbittorrent
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    volumes:
+      - ./config/vpn:/vpn
+    command: openvpn --config /vpn/openvpnconfig.ovpn --auth-user-pass /vpn/vpn-credentials.txt
+    restart: always
+
+  sonarr:
+    image: linuxserver/sonarr
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Istanbul
+    volumes:
+      - ./config/sonarr:/config
+      - ./Library/Shows:/tv
+      - ./Library/Movies:/movies 
+      - ./Library/Downloads:/downloads
+    depends_on:
+      - openvpn-client
+    ports:
+      - 8989:8989
+    restart: always
+
+  radarr:
+    image: linuxserver/radarr
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Istanbul
+    volumes:
+      - ./config/radarr:/config
+      - ./Library/Shows:/tv
+      - ./Library/Movies:/movies 
+      - ./Library/Downloads:/downloads
+    depends_on:
+      - openvpn-client
+    ports:
+      - 7878:7878
+    restart: always
+
+  prowlarr:
+    image: linuxserver/prowlarr
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Istanbul
+    dns:
+      - 1.1.1.1
+      - 1.0.0.1
+    volumes:
+      - ./config/prowlarr:/config
+      - ./config/prowlarr/logs:/logs
+    ports:
+      - 9696:9696
+    depends_on:
+      - openvpn-client
+    restart: always
+
+  qbittorrent:
+    image: linuxserver/qbittorrent
+    container_name: qbittorrent
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Istanbul
+      - WEBUI_PORT=8080
+    volumes:
+      - ./config/qbittorrent:/config
+      - ./Library/Downloads:/downloads
+    depends_on:
+      - openvpn-client
+    network_mode: service:openvpn-client
+    restart: always
