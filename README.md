@@ -1,3 +1,4 @@
+![Logo](https://raw.githubusercontent.com/gkhntpbs/MediaDock/main/app/MediaDock.ico)
 # Media Dock
 
 This project uses Docker Compose to manage several services (Jellyseerr, Sonarr, Radarr, Prowlarr, qBittorrent, and an OpenVPN client) running on Docker. These services work together to download, manage, and stream media files. It's important to note that Jellyfin is not included in this stack and needs to be set up separately as it runs directly on the host machine.
