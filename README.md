@@ -57,9 +57,9 @@ Follow these steps to start the project:
 1. Open the command line.
 2. Go to the project directory.
 3. Run the following command to start all services:
-docker-compose up -d
+`docker-compose up -d`
 4. To check that all services are running properly, use:
-docker-compose ps
+`docker-compose ps`
 
 ## Usage
 
